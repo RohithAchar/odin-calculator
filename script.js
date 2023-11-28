@@ -1,7 +1,22 @@
+const operandButtons = document.querySelectorAll('.operand-btn');
+const operatorButtons = document.querySelectorAll('.operator-btn');
+const displayBox = document.querySelector('#display');
+const clearButton = document.querySelector('#clear');
+
 let op1;
 let operator;
 let op2;
+operandButtons.forEach(button => {
+    button.addEventListener('click',populate);
+});
+operatorButtons.forEach(button => {
+    button.addEventListener('click',populate);
+});
 
+
+function populate(e){
+    displayBox.value = e.target.id;
+}
 function operate(){
     switch (operator) {
         case "+": console.log(add(op1,op2));
