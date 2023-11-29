@@ -2,12 +2,11 @@ const operandButtons = document.querySelectorAll('.operand-btn');
 const operatorButtons = document.querySelectorAll('.operator-btn');
 const displayBox = document.querySelector('#display');
 const clearButton = document.querySelector('#clear');
-const calculate = document.querySelector('#calculate');
+const equalButton = document.querySelector('#calculate');
 
-let op1;
-let operator;
-let op2;
-let input = "";
+let expression = "";
+let expArray = [];
+let result;
 operandButtons.forEach(button => {
     button.addEventListener('click',populate);
 });
@@ -15,40 +14,72 @@ operatorButtons.forEach(button => {
     button.addEventListener('click',populate);
 });
 clearButton.addEventListener('click',clearDisplayBox)
+equalButton.addEventListener('click',calculate)
 
 function populate(e){
-    input += e.target.id;
-    displayBox.value = input;
+    expression += e.target.id;
+    displayBox.value = expression;
 }
 function clearDisplayBox(){
-    input = "";
+    expression = "";
     displayBox.value = "";
 }
-function operate(){
-    switch (operator) {
-        case "+": console.log(add(op1,op2));
-            break;
-        case "-": console.log(subtract(op1,op2));
-            break;
-        case "*": console.log(multiply(op1,op2));
-            break;
-        case "/": console.log(divide(op1,op2));
-            break;    
-        default:
-            break;
+function calculate(){
+    let operatorIndex;
+    expArray = expression.match(/(\d+|[-+*/])/g);
+    while(expArray.length > 2){
+        console.log(expArray);
+        if(expArray.includes("*")){
+            operatorIndex = expArray.indexOf("*");
+            expArray.splice(operatorIndex - 1,3,operate(expArray[operatorIndex - 1],
+                                                        expArray[operatorIndex],
+                                                        expArray[operatorIndex + 1]));
+        }else if(expArray.includes("/")){
+            operatorIndex = expArray.indexOf("/");
+            expArray.splice(operatorIndex - 1,3,operate(expArray[operatorIndex - 1],
+                                                        expArray[operatorIndex],
+                                                        expArray[operatorIndex + 1]));
+        }else if(expArray.includes("+")){
+            operatorIndex = expArray.indexOf("+");
+            expArray.splice(operatorIndex - 1,3,operate(expArray[operatorIndex - 1],
+                                                        expArray[operatorIndex],
+                                                        expArray[operatorIndex + 1]));
+        }else if(expArray.includes("-")){
+            operatorIndex = expArray.indexOf("-");
+            expArray.splice(operatorIndex - 1,3,operate(expArray[operatorIndex - 1],
+                                                        expArray[operatorIndex],
+                                                        expArray[operatorIndex + 1]));
+        }
     }
+    result = expArray[0];
+    displayBox.value = result;
+    expression = "";
+}
+function operate(op1,operator,op2){
+    op1 = parseInt(op1);
+    op2 = parseInt(op2);
+    console.log(op1,operator,op2);
+        switch (operator) {
+            case "+": return add(op1,op2);
+            case "-": return subtract(op1,op2);
+            case "*": return multiply(op1,op2);
+            case "/": return divide(op1,op2);
+            default:
+                break;
+            }
 }
 
 
 function add(op1,op2){
-    return op1 + op2;
+    return (op1 + op2).toString();
 }
 function subtract(op1,op2){
-    return op1 - op2;
+    return (op1 - op2).toString();
 }
 function multiply(op1,op2){
-    return op1 * op2;
+    return (op1 * op2).toString();
 }
 function divide(op1,op2){
-    if(op2 !== 0) return op1 / op2;
+    if(op2 !== 0) return (op1 / op2).toFixed(2).toString();
+    return;
 }
