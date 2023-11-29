@@ -81,5 +81,5 @@ function multiply(op1,op2){
 }
 function divide(op1,op2){
     if(op2 !== 0) return (op1 / op2).toFixed(2).toString();
-    return;
+    return "Divisible by zero";
 }
